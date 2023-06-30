@@ -1,16 +1,25 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import 'bootstrap/dist/js/bootstrap.bundle';
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import {useDispatch, useSelector} from 'react-redux'
+import { logoutUser } from '../actions/userActions';
 
 export default function Navbar(){
+
+    const cartstate = useSelector(state => state.cartReducer)
+    const userstate = useSelector(state => state.loginUserReducer)
+    const {currentUser} = userstate
+    const dispatch = useDispatch()
     return (
         <div>
-            <nav class="navbar navbar-expand-lg shadow-lg p-3 mb-5 bg-body-tertiary rounded">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="Home">
+            <nav className="navbar navbar-expand-lg shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+                <div className="container-fluid">
+                    <a className="navbar-brand" href="/">
                         The Menu
                     </a>
                     <button 
-                        class="navbar-toggler" 
+                        className="navbar-toggler" 
                         type="button" 
                         data-bs-toggle="collapse" 
                         data-bs-target="#navbarNav" 
@@ -18,15 +27,36 @@ export default function Navbar(){
                         aria-expanded="false" 
                         aria-label="Toggle navigation"
                         >
-                        <span class="navbar-toggler-icon"></span>
+                        <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="Home">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="Home">Cart</a>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav ms-auto">
+                            {currentUser ? (
+                                <div class="dropdown mt-2">
+                                <a 
+                                    class="dropdown-toggle" 
+                                    style={{color:'black'}} 
+                                    type="button" 
+                                    id="dropdownMenuButton" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-haspopup="true" 
+                                    aria-expanded="false"
+                                >
+                                  {currentUser.name}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  <a class="dropdown-item" href="/orders">Orders</a>
+                                  <a class="dropdown-item" href="#" onClick={() => {dispatch(logoutUser())}}><li>Logout</li></a>
+                                </div>
+                              </div>
+                            ) : (
+                                <li className="nav-item">
+                                    <a className="nav-link" href="/login">Login</a>
+                                </li>
+                            )}
+                            
+                            <li className="nav-item">
+                                <a className="nav-link" href="/cart">Cart {cartstate.cartItems.length}</a>
                             </li>
                         </ul>
                     </div>
